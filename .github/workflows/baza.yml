@@ -1,0 +1,47 @@
+name: Baza i testovi
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  testovi-sa-bazom:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: tajna
+          MYSQL_DATABASE: jackpot
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Uzmi kod
+        uses: actions/checkout@v4
+
+      - name: Instaliraj PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo_mysql
+
+      - name: Pokreni migracije
+        run: |
+          for fajl in aplikacija/migracije/*.sql; do
+            echo "▶ Pokrećem $fajl"
+            mysql -h 127.0.0.1 -u root -ptajna jackpot < "$fajl"
+          done
+
+      - name: Prikaži strukturu tabele
+        run: mysql -h 127.0.0.1 -u root -ptajna jackpot -e "DESCRIBE igraci;"
+
+      - name: Pokreni testove
+        run: php aplikacija/testovi/test.php
