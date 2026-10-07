@@ -20,6 +20,9 @@ jobs:
       - name: Čuvar proverava da sajt ima naslov
         run: grep "<h1>" sajt/index.html
 
+      - name: Provera ponedeljka
+        run: ! grep "ponedeljak" sajt/index.html
+
       - name: Pripremi objavljivanje
         uses: actions/configure-pages@v5
 
