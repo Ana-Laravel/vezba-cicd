@@ -14,3 +14,8 @@ jobs:
 
       - name: Prikaži gde se nalazim
         run: pwd
+      - name: Korak koji pada
+        run: exit 1
+
+      - name: Ovaj se neće izvršiti
+        run: echo "Da li me vidiš?"
