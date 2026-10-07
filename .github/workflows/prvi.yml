@@ -1,0 +1,16 @@
+name: Moj prvi pipeline
+
+on: push
+
+jobs:
+  pozdrav:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kaži zdravo
+        run: echo "Zdravo! Pipeline radi."
+
+      - name: Prikaži datum i vreme
+        run: date
+
+      - name: Prikaži gde se nalazim
+        run: pwd
