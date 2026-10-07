@@ -1,1 +1,33 @@
+name: Objavi sajt
 
+on: push
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  objavi:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Uzmi kod
+        uses: actions/checkout@v4
+
+      - name: Čuvar proverava da sajt ima naslov
+        run: grep "<h1>" sajt/index.html
+
+      - name: Pripremi objavljivanje
+        uses: actions/configure-pages@v5
+
+      - name: Spakuj sajt
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: sajt
+
+      - name: Objavi na internet
+        id: deployment
+        uses: actions/deploy-pages@v4
